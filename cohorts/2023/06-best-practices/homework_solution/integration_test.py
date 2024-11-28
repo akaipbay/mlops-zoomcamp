@@ -6,7 +6,7 @@ import batch
 
 
 def dt(hour, minute, second=0):
-    return datetime(2022, 1, 1, hour, minute, second)
+    return datetime(2023, 1, 1, hour, minute, second)
 
 
 S3_ENDPOINT_URL = os.getenv('S3_ENDPOINT_URL')

@@ -45,5 +45,7 @@ os.system('python batch.py 2021 1')
 
 df_actual = pd.read_parquet(output_file, storage_options=options)
 
+print(f'assert 1: {abs(df_actual['predicted_duration'].sum())}')
+print(f'assert 2: {abs(df_actual['predicted_duration'].sum() - 69.28)}')
 
 assert abs(df_actual['predicted_duration'].sum() - 69.28) < 0.1

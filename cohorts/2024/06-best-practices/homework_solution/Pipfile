@@ -6,10 +6,11 @@ name = "pypi"
 [packages]
 scikit-learn = "==1.5.0"
 pandas = "*"
-pyarrow = "*"
 s3fs = "*"
+pyarrow = "*"
 
 [dev-packages]
+pytest = "*"
 
 [requires]
 python_version = "3.9"

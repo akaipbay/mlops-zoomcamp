@@ -1,44 +1,39 @@
-import pandas as pd
-import pytest
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from homework_solution import batch
+import pandas as pd
+
+import batch
+
+
+def dt(hour, minute, second=0):
+    return datetime(2021, 1, 1, hour, minute, second)
+
 
 def test_prepare_data():
-    # Test input
-    data = {
-        "tpep_pickup_datetime": [
-            datetime(2024, 1, 1, 10, 0),
-            datetime(2024, 1, 1, 10, 10),
-            datetime(2024, 1, 1, 10, 30),
-        ],
-        "tpep_dropoff_datetime": [
-            datetime(2024, 1, 1, 10, 30),
-            datetime(2024, 1, 1, 10, 40),
-            datetime(2024, 1, 1, 11, 45),
-        ],
-        "passenger_count": [1, None, 3],
-        "payment_type": [None, 2, None],
-    }
-    df = pd.DataFrame(data)
-    categorical_columns = ["passenger_count", "payment_type"]
+    data = [
+        (None, None, dt(1, 2), dt(1, 10)),
+        (1, 1, dt(1, 2), dt(1, 10)),
+        (1, 1, dt(1, 2, 0), dt(1, 2, 50)),
+        (1, 1, dt(1, 2, 0), dt(2, 2, 1)),        
+    ]
 
-    # Run the function
-    result_df = batch.prepare_data(df, categorical_columns)
+    categorical = ['PUlocationID', 'DOlocationID']
+    columns = ['PUlocationID', 'DOlocationID', 'pickup_datetime', 'dropOff_datetime']
+    df = pd.DataFrame(data, columns=columns)
 
-    # Check duration calculation
-    expected_durations = [30, 30, 75]  # in minutes
-    assert (result_df["duration"].values[:2] == expected_durations[:2]).all()
+    df_actual = batch.prepare_data(df, categorical)
 
-    # Check duration filtering
-    assert result_df["duration"].between(1, 60).all(), "Filtered durations not within range."
+    data_expected = [
+        ('-1', '-1', 8.0),
+        ( '1',  '1', 8.0),
+    ]
 
-    # Check if categorical columns are converted to strings and NaNs handled as -1
-    assert result_df["passenger_count"].dtype == object
-    assert result_df["payment_type"].dtype == object
-    assert (result_df["passenger_count"] == ["1", "-1"]).all()
-    assert (result_df["payment_type"] == ["-1", "2"]).all()
+    columns_test = ['PUlocationID', 'DOlocationID', 'duration']
+    df_expected = pd.DataFrame(data_expected, columns=columns_test)
+    print(df_actual)
 
-    # Check if rows with duration outside 1-60 min are excluded
-    assert len(result_df) == 2, "Rows with out-of-range durations were not excluded."
+    assert (df_actual['PUlocationID'] == df_expected['PUlocationID']).all()
+    assert (df_actual['DOlocationID'] == df_expected['DOlocationID']).all()
+    assert (df_actual['duration'] - df_expected['duration']).abs().sum() < 0.0000001
+
 

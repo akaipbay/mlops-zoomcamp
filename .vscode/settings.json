@@ -1,0 +1,10 @@
+{
+    "python.testing.pytestArgs": [
+        "cohorts"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.promptToConfigure": true,
+    "python.testing.cwd": "${workspaceFolder}/cohorts/2024/06-best-practices/homework_solution/tests",
+    "python.testing.autoTestDiscoverOnSaveEnabled": true
+}
